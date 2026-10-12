@@ -27,3 +27,10 @@ The trade-off: we return **naive** datetimes and do not guess a timezone. EXIF 2
 - Sub-second strings shorter than 6 digits are right-padded (`"12"` becomes `120000` microseconds). Strings longer than 6 digits are truncated, not rounded.
 - A date-only string (`"2013:04:24"`) parses to midnight. Some cameras emit this when the time tag is missing.
 - The parser accepts a space or `T` between date and time. Other separators are rejected.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
